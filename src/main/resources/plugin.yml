@@ -1,0 +1,11 @@
+name: TheiaHelper
+version: '${version}'
+main: me.jerriidesu.theiahelper.TheiaHelper
+api-version: 1.16
+commands:
+  togglesponge:
+    aliases:
+      - tos
+  togglepickup:
+    aliases:
+      - top
