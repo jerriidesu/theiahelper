@@ -2,6 +2,7 @@ package me.jerriidesu.theiahelper.handler;
 
 import me.jerriidesu.theiahelper.TheiaHelper;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,13 +22,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SpongeHandler implements Listener, CommandExecutor {
 
     private final TheiaHelper plugin;
 
     private final List<UUID> activated = new ArrayList<>();
-    private final ConcurrentHashMap<Location, UUID> changed = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Location, UUID> sponges = new ConcurrentHashMap<>();
+    private final CopyOnWriteArrayList<Location> air = new CopyOnWriteArrayList<>();
 
     private BukkitTask timer;
     private boolean shouldCleanup = false;
@@ -51,7 +54,8 @@ public class SpongeHandler implements Listener, CommandExecutor {
 
         if (modified) {
             this.shouldCleanup = true;
-            player.sendMessage(Component.text("Das automatische Löschen von " + Component.translatable("block.minecraft.wet_sponge") + " wurde umgeschaltet."));
+            Component text = Component.text("Das automatische Löschen von ").toBuilder().append(Component.translatable("block.minecraft.wet_sponge")).append(Component.text(" wurde umgeschaltet.")).build();
+            player.sendMessage(text);
         }
 
         return true;
@@ -59,7 +63,7 @@ public class SpongeHandler implements Listener, CommandExecutor {
 
     @EventHandler
     public void onSpongePlace(BlockPlaceEvent event) {
-        if (event.getBlockPlaced().getType() != Material.WET_SPONGE) {
+        if (event.getBlockPlaced().getType() != Material.SPONGE) {
             return;
         }
 
@@ -67,7 +71,7 @@ public class SpongeHandler implements Listener, CommandExecutor {
             return;
         }
 
-        this.changed.put(event.getBlockPlaced().getLocation(), event.getPlayer().getUniqueId());
+        this.sponges.put(event.getBlockPlaced().getLocation(), event.getPlayer().getUniqueId());
     }
 
     @EventHandler
@@ -76,33 +80,39 @@ public class SpongeHandler implements Listener, CommandExecutor {
             return;
         }
 
-        this.changed.remove(event.getBlock());
+        this.sponges.remove(event.getBlock().getLocation());
     }
 
     @EventHandler
     public void onSpongeAbsorb(SpongeAbsorbEvent event) {
-        if (!this.changed.containsKey(event.getBlock().getLocation())) {
+        if (!this.sponges.containsKey(event.getBlock().getLocation())) {
             return;
         }
 
-        this.changed.remove(event.getBlock().getLocation());
-        event.getBlock().setType(Material.AIR);
+        this.sponges.remove(event.getBlock().getLocation());
+        this.air.add(event.getBlock().getLocation());
+        this.shouldCleanup = true;
     }
 
     public void startTimer() {
-        this.timer = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+        this.timer = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             if (!this.shouldCleanup) {
                 return;
             }
 
-            this.changed.forEach((location, uuid) -> {
+            this.air.forEach((location)-> {
+                location.getBlock().setType(Material.AIR);
+                this.air.remove(location);
+            });
+
+            this.sponges.forEach((location, uuid) -> {
                 if (this.activated.contains(uuid)) {
                     return;
                 }
 
-                this.changed.remove(location);
+                this.sponges.remove(location);
             });
-        }, 100L, 20L * 60L);
+        }, 20L, 60L);
     }
 
     public void disableTimer() {
