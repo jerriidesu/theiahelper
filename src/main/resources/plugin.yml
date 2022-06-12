@@ -9,3 +9,6 @@ commands:
   togglepickup:
     aliases:
       - top
+  sitdown:
+    aliases:
+      - sit

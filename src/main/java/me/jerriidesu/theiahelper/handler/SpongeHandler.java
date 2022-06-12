@@ -2,7 +2,6 @@ package me.jerriidesu.theiahelper.handler;
 
 import me.jerriidesu.theiahelper.TheiaHelper;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
