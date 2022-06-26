@@ -27,11 +27,10 @@ public class ItemPickupHandler implements Listener, CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             return false;
         }
 
-        Player player = (Player) sender;
         UUID uuid = player.getUniqueId();
 
         //should always return true

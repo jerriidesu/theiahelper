@@ -34,26 +34,24 @@ public class SeatHandler implements Listener, CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(!(sender instanceof Player)) {
+        if(!(sender instanceof Player player)) {
             return false;
         }
 
-        Location location = ((Player) sender).getLocation();
+        Location location = player.getLocation();
         location.add(0, -1.7, 0);
 
-        this.sitDown((Player) sender, location);
+        this.sitDown(player, location);
         return true;
     }
 
     @EventHandler
     public void onSeatLeave(EntityDismountEvent event) {
-        if (!(event.getEntity() instanceof Player)) {
+        if (!(event.getEntity() instanceof Player player)) {
             return;
         }
 
         this.deleteSeat(event.getDismounted());
-
-        Player player = (Player) event.getEntity();
         player.teleport(player.getLocation().add(0, 1, 0), PlayerTeleportEvent.TeleportCause.PLUGIN);
     }
 
@@ -84,11 +82,10 @@ public class SeatHandler implements Listener, CommandExecutor {
             return;
         }
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK || !(event.getClickedBlock().getBlockData() instanceof Stairs)) {
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK || !(event.getClickedBlock().getBlockData() instanceof Stairs stairs)) {
             return;
         }
 
-        Stairs stairs = (Stairs) event.getClickedBlock().getBlockData();
         if (!player.getFacing().equals(stairs.getFacing()) || player.getEyeLocation().getPitch() < -4 || stairs.getHalf().equals(Bisected.Half.TOP) || !stairs.getShape().equals(Stairs.Shape.STRAIGHT) || stairs.isWaterlogged()) {
             return;
         }
