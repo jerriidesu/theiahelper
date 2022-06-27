@@ -12,3 +12,6 @@ commands:
   sitdown:
     aliases:
       - sit
+  flyspeed:
+    aliases:
+      - fs

@@ -1,5 +1,6 @@
 package me.jerriidesu.theiahelper;
 
+import me.jerriidesu.theiahelper.commands.FlySpeedCommand;
 import me.jerriidesu.theiahelper.handler.ItemPickupHandler;
 import me.jerriidesu.theiahelper.handler.SeatHandler;
 import me.jerriidesu.theiahelper.handler.SpongeHandler;
@@ -47,5 +48,7 @@ public class TheiaHelper extends JavaPlugin {
         this.getCommand("togglesponge").setExecutor(this.spongeHandler);
         this.getCommand("togglepickup").setExecutor(this.itemPickupHandler);
         this.getCommand("sitdown").setExecutor(this.seatHandler);
+
+        this.getCommand("flyspeed").setExecutor(new FlySpeedCommand());
     }
 }
