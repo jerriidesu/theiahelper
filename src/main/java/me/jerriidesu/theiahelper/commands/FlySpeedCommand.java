@@ -19,12 +19,12 @@ public class FlySpeedCommand implements CommandExecutor {
         }
 
         try {
-            float speed = Integer.parseInt(args[0]);
+            float speed = Float.parseFloat(args[0]);
 
             player.setFlySpeed(speed);
             player.sendMessage(Component.text("Fluggeschwindigkeit auf " + speed + " gesetzt."));
-        } catch (NumberFormatException exception) {
-            player.sendMessage(Component.text("Keine gültige Zahl!"));
+        } catch (IllegalArgumentException exception) {
+            player.sendMessage(Component.text("Keine gültige Zahl! Muss zwischen 0 und 1 liegen."));
         }
 
         return true;
