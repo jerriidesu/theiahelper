@@ -34,7 +34,7 @@ public class SeatHandler implements Listener, CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(!(sender instanceof Player player)) {
+        if (!(sender instanceof Player player)) {
             return false;
         }
 
@@ -59,7 +59,7 @@ public class SeatHandler implements Listener, CommandExecutor {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
-        if(!player.isInsideVehicle()) {
+        if (!player.isInsideVehicle()) {
             return;
         }
 
@@ -70,19 +70,19 @@ public class SeatHandler implements Listener, CommandExecutor {
     public void onChairInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
-        if(player.isInsideVehicle() || player.isSneaking()) {
+        if (player.isInsideVehicle() || player.isSneaking()) {
             return;
         }
 
-        if(!player.getInventory().getItemInMainHand().getType().isAir() || event.getClickedBlock() == null) {
+        if (!player.getInventory().getItemInMainHand().getType().isAir() || event.getClickedBlock() == null) {
             return;
         }
 
-        if(event.getClickedBlock().getLocation().distance(player.getLocation()) > 2.5) {
+        if (event.getClickedBlock().getLocation().distance(player.getLocation()) > 2.5) {
             return;
         }
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK || !(event.getClickedBlock().getBlockData() instanceof Stairs stairs)) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || !(event.getClickedBlock().getBlockData() instanceof Stairs stairs)) {
             return;
         }
 
@@ -100,7 +100,7 @@ public class SeatHandler implements Listener, CommandExecutor {
     }
 
     private void sitDown(Player player, Location location) {
-        if(player.isInsideVehicle() || !player.isOnGround()) {
+        if (player.isInsideVehicle() || !player.isOnGround()) {
             return;
         }
 
@@ -114,11 +114,11 @@ public class SeatHandler implements Listener, CommandExecutor {
     }
 
     private void deleteSeat(Entity entity) {
-        if(!(entity instanceof ArmorStand)) {
+        if (!(entity instanceof ArmorStand)) {
             return;
         }
 
-        if(!entity.hasMetadata("chair")) {
+        if (!entity.hasMetadata("chair")) {
             return;
         }
 

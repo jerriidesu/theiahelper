@@ -98,7 +98,7 @@ public class SpongeHandler implements Listener, CommandExecutor {
                 return;
             }
 
-            this.air.forEach((location)-> {
+            this.air.forEach((location) -> {
                 location.getBlock().setType(Material.AIR);
                 this.air.remove(location);
             });
